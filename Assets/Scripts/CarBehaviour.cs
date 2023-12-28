@@ -26,6 +26,12 @@ public class CarBehaviour : MonoBehaviour
     }
     private void OnFrontCollision(string tag, bool entering)
     {
+        if (tag == "Deleter")
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         if (tag != "StopLight") return;
 
         stopped = entering;
