@@ -84,7 +84,8 @@ public class CrossroadController : MonoBehaviour
         }
 
     }
-
+    private void OpenRightStopper() => stopperRight.position = new(stopperRight.position.x, 40f, stopperRight.position.z);
+    private void OpenLeftStopper() => stopperLeft.position = new(stopperLeft.position.x, 40f, stopperLeft.position.z);
     private void OpenStopper(bool leftIsOpen)
     {
         stopperLeft.position = new(stopperLeft.position.x, leftIsOpen ? 40f : 0f, stopperLeft.position.z);
@@ -94,5 +95,41 @@ public class CrossroadController : MonoBehaviour
     {
         stopperLeft.position = new(stopperLeft.position.x, 0f, stopperLeft.position.z);
         stopperRight.position = new(stopperRight.position.x, 0f, stopperRight.position.z);
+    }
+
+    public void OnReceiveStoplightData(StoplightStatusPacket data)
+    {
+        CloseStoppers();
+
+        switch (data.leftStoplightStatus)
+        {
+            case "Green":
+                stopLightLeft.ChangeState(StopLightState.Green);
+                break;
+            case "Yellow":
+                stopLightLeft.ChangeState(StopLightState.Yellow);
+                break;
+            case "Red":
+                stopLightLeft.ChangeState(StopLightState.Red);
+                break;
+        }
+
+        switch (data.rightStoplightStatus)
+        {
+            case "Green":
+                stopLightRight.ChangeState(StopLightState.Green);
+                break;
+            case "Yellow":
+                stopLightRight.ChangeState(StopLightState.Yellow);
+                break;
+            case "Red":
+                stopLightRight.ChangeState(StopLightState.Red);
+                break;
+        }
+
+        if (data.leftStoplightStatus == "Green")
+            OpenLeftStopper();
+        if (data.rightStoplightStatus == "Green")
+            OpenRightStopper();
     }
 }

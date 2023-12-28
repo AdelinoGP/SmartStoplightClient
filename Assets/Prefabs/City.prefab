@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7493362228262632415}
   - component: {fileID: 8019072526339091467}
-  - component: {fileID: 6473035034704571767}
   - component: {fileID: 2516163048983215572}
   m_Layer: 0
   m_Name: LeftCamera
@@ -85,14 +84,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &6473035034704571767
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1556237582628993330}
-  m_Enabled: 1
 --- !u!114 &2516163048983215572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,7 +223,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8259829979415816455}
   - component: {fileID: 1509899571762092219}
-  - component: {fileID: 5894120725735735101}
   - component: {fileID: 7859512486048834799}
   m_Layer: 0
   m_Name: RightCamera
@@ -307,14 +297,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &5894120725735735101
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4902319830513161930}
-  m_Enabled: 1
 --- !u!114 &7859512486048834799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -535,7 +517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01a4e9be2c7f93e40969fd00839fa25e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  test: 1
+  test: 0
   spawnTime: 3
   stopLightLeft: {fileID: 8903006859570074167}
   carSpawnerLeft: {fileID: 6890206967903530493}
@@ -557,13 +539,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df25db04333aceb4db1bd03692976ca4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  msTillUpdate: 20
-  _address: ws://localhost:8001
-  _maxMessageSize: 320000
-  _noDelay: 1
-  _sendTimeout: 5000
-  _receiveTimeout: 5000
-  _maxMessagePerTick: 500
+  secondsTillUpdate: 0.3
+  address: ws://localhost:8001
   crossroadController: {fileID: 7794635938464146739}
 --- !u!1001 &278079024447773606
 PrefabInstance:

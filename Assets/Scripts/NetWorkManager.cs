@@ -10,10 +10,15 @@ public struct CameraPacket
     public bool isLeftSide;
     public string base64Image;
 }
+public struct StoplightStatusPacket
+{
+    public string leftStoplightStatus;
+    public string rightStoplightStatus;
+}
 
 public class NetworkManager : MonoBehaviour
 {
-    [SerializeField] private int msTillUpdate = 10000;
+    [SerializeField] private float secondsTillUpdate = 0.3f;
     [SerializeField] private string address = "ws://localhost:8001";
 
     [SerializeField] private CrossroadController crossroadController;
@@ -22,10 +27,11 @@ public class NetworkManager : MonoBehaviour
     private static WebSocket websocket;
     private float keepAlive = 0;
     private float updateTimer = 0;
+    private bool connecting = false;
 
     private bool sendLeftSide = false;
-
-    public int MsTillUpdate { get => msTillUpdate; }
+    private int maxRetries = 5;
+    public float MsTillUpdate { get => secondsTillUpdate; }
     private Coroutine printCoroutine;
 
     private void Awake()
@@ -40,7 +46,9 @@ public class NetworkManager : MonoBehaviour
 
     private void Update()
     {
-        if (printCoroutine == null && updateTimer > msTillUpdate)
+        websocket.DispatchMessageQueue();
+
+        if (printCoroutine == null && updateTimer > secondsTillUpdate)
         {
             printCoroutine = StartCoroutine(PrintAndSend());
             updateTimer = 0;
@@ -54,11 +62,29 @@ public class NetworkManager : MonoBehaviour
         }
         updateTimer += Time.deltaTime;
     }
-    private void OnDestroy() => websocket?.Close();
+    private void OnDestroy()
+    {
+        websocket?.CancelConnection();
+        websocket?.Close();
+        websocket = null;
+        instance = null;
+    }
 
     private async Task ConnectAsync()
     {
+        if (maxRetries < 0 || connecting)
+            return;
 
+        maxRetries--;
+
+        if (websocket != null)
+        {
+            websocket?.CancelConnection();
+            websocket?.Close();
+            websocket = null;
+        }
+
+        connecting = true;
         websocket = new WebSocket(address);
 
         websocket.OnOpen += OnConnect;
@@ -73,32 +99,48 @@ public class NetworkManager : MonoBehaviour
 
     private void OnDisconnect(WebSocketCloseCode closeCode)
     {
-        Debug.Log($"Disconnected to Server");
+        if (instance == null)
+            return;
+        Debug.Log($"Desconectou do servidor, tentando reconexão");
+
+        connecting = false;
+        _ = ConnectAsync();
     }
 
     private void OnError(string exception)
     {
-        Debug.Log($"Error because of Server, Error:{exception}");
+        if (instance == null)
+            return;
+
+        Debug.Log($"Erro na conexão, Erro:{exception}, tentando reconexão");
+
+        connecting = false;
+        _ = ConnectAsync();
     }
 
     private void OnConnect()
     {
-        Debug.Log($"Connected to Server");
+        Debug.Log($"Conectou no servidor");
         printCoroutine = StartCoroutine(PrintAndSend());
+        connecting = false;
     }
 
     private void OnMessage(byte[] data)
     {
-        Debug.Log($"Data from Server, length:{data.Length}, data:{data}");
+        string stringData = Encoding.UTF8.GetString(data);
+        Debug.Log("Recebeu do servidor: " + stringData);
+        StoplightStatusPacket receivedPacket = JsonUtility.FromJson<StoplightStatusPacket>(stringData);
+
+        crossroadController.OnReceiveStoplightData(receivedPacket);
     }
 
-    public static void SendCamera(byte[] imageAsBytes)
+    public void SendCamera(byte[] imageAsBytes)
     {
-        string base64ImageRepresentation = Convert.ToBase64String(imageAsBytes) ;
-        Debug.Log("Image as string:" + base64ImageRepresentation);
+        //Debug.Log("Enviando imagem, lado esquerdo? " + sendLeftSide);
+        string base64ImageRepresentation = Convert.ToBase64String(imageAsBytes);
         CameraPacket clientData = new()
         {
-            isLeftSide = instance.sendLeftSide,
+            isLeftSide = sendLeftSide,
             base64Image = base64ImageRepresentation,
         };
 
@@ -110,7 +152,7 @@ public class NetworkManager : MonoBehaviour
     private IEnumerator PrintAndSend()
     {
         var camera = sendLeftSide ? crossroadController.cameraLeft : crossroadController.cameraRight;
-        var renderTexture = RenderTexture.GetTemporary(Screen.width/2 , Screen.height /2);
+        var renderTexture = RenderTexture.GetTemporary(Screen.width / 2, Screen.height / 2);
         camera.targetTexture = renderTexture;
 
         yield return new WaitForEndOfFrame();
@@ -123,7 +165,7 @@ public class NetworkManager : MonoBehaviour
 
         RenderTexture.active = null;
         camera.targetTexture = null;
-        camera.Render();
+        // camera.Render();
 
         renderTexture.Release();
 
@@ -132,6 +174,7 @@ public class NetworkManager : MonoBehaviour
         SendCamera(bytes);
         Destroy(texture);
 
-        instance.printCoroutine = null;
+        sendLeftSide = !sendLeftSide;
+        printCoroutine = null;
     }
 }

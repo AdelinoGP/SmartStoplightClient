@@ -667,18 +667,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3497101025086603538, guid: c839d7340a052e44ca37c8c9230e4f12, type: 3}
-      propertyPath: _address
-      value: ws://localhost:8001
-      objectReference: {fileID: 0}
-    - target: {fileID: 3497101025086603538, guid: c839d7340a052e44ca37c8c9230e4f12, type: 3}
-      propertyPath: _sendTimeout
-      value: 25000
-      objectReference: {fileID: 0}
-    - target: {fileID: 3497101025086603538, guid: c839d7340a052e44ca37c8c9230e4f12, type: 3}
-      propertyPath: _receiveTimeout
-      value: 25000
-      objectReference: {fileID: 0}
     - target: {fileID: 3642361916084717090, guid: c839d7340a052e44ca37c8c9230e4f12, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
