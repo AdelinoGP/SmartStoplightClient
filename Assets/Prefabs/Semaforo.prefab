@@ -453,7 +453,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.2588191, z: 0, w: 0.9659258}
   m_LocalPosition: {x: -229.214, y: 21.34, z: 183.893}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3.125, y: 3.125, z: 3.125}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5691704012641367448}
@@ -477,7 +477,7 @@ MonoBehaviour:
   greenLight: {fileID: 4020027060866402311}
   yellowLight: {fileID: 5535230650230012756}
   redLight: {fileID: 1966249706470433551}
-  blackMaterial: {fileID: 2100000, guid: c9af0dbe88854d64aa8e276b41a10462, type: 2}
+  blackMaterial: {fileID: -3625830788085993417, guid: e269efbaabcd6b948a6ad0290303f9d6, type: 3}
   greenMaterial: {fileID: 2100000, guid: 511828cdf3ac1a74b966ebeec7918e1a, type: 2}
   yellowMaterial: {fileID: 2100000, guid: f3ec04f3deb46e3428ea36c169787867, type: 2}
   redMaterial: {fileID: 2100000, guid: 5aa8ae61d966de440ade09f4a75e234c, type: 2}
