@@ -7,6 +7,7 @@ TagManager:
   - CinemachineTarget
   - SoftCollider
   - StopLight
+  - Deleter
   layers:
   - Default
   - TransparentFX
