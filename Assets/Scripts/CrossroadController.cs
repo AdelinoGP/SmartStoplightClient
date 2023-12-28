@@ -11,11 +11,13 @@ public class CrossroadController : MonoBehaviour
     [SerializeField] private StopLightView stopLightLeft;
     [SerializeField] private CarSpawner carSpawnerLeft;
     [SerializeField] private Transform stopperLeft;
+    [SerializeField] public Camera cameraLeft;
 
     [Header("RightObjects")]
     [SerializeField] private StopLightView stopLightRight;
     [SerializeField] private CarSpawner carSpawnerRight;
     [SerializeField] private Transform stopperRight;
+    [SerializeField] public Camera cameraRight;
 
     private float currentSpawnTime = 0;
 
